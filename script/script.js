@@ -51,33 +51,11 @@ window.addEventListener('DOMContentLoaded', function(){
           closeBtn = document.querySelector('.close-btn'),
           menuItems = menu.querySelectorAll('ul>li');
     
-    let count = 0;
-    let animateContainer;
-
-    const menuAnimation = () => {
-      count++; 
-      menu.style.transform = `translateX(${count * 2}%)`;
-      if (count >= 50) {
-        clearInterval(animateContainer);
-      }
-    }; 
-    
-    
     const handlerMenu = () => {
-      if (!menu.style.transform || menu.style.transform === `translateX(-100%)`) {
-        menu.style.transform = `translateX(0)`;
-      } else {
-        menu.style.transform = `translateX(-100%)`;
-      } 
+      menu.classList.toggle('active-menu');
     };
 
-    btnMenu.addEventListener('click', function() {
-      handlerMenu();
-      if (document.documentElement.clientWidth > 768) {
-        animateContainer = setInterval(menuAnimation, 10);
-        count = 0;
-      }   
-    });
+    btnMenu.addEventListener('click', handlerMenu);
     closeBtn.addEventListener('click', handlerMenu);
 
     menuItems.forEach((elem) => elem.addEventListener('click', handlerMenu));
@@ -89,16 +67,33 @@ window.addEventListener('DOMContentLoaded', function(){
   const togglePopUp = () => {
     const popup = document.querySelector('.popup'),
           popUpBtn = document.querySelectorAll('.popup-btn'),
-          popupClose = document.querySelector('.popup-close');
+          popupClose = document.querySelector('.popup-close'),
+          popupContent = document.querySelector('.popup-content');
+
+    let count = -50;
+    let animateContainer;
+
+    const popupAnimation = () => {
+      count++; 
+      popupContent.style.transform = `translateX(${count * 2}%)`;
+      if (count >= -5) {
+        clearInterval(animateContainer);
+      }
+    }; 
 
     popUpBtn.forEach((elem) => {
       elem.addEventListener('click', () => {
         popup.style.display = 'block';
+        if (document.documentElement.clientWidth > 768) {
+          animateContainer = setInterval(popupAnimation, 10);
+          count = -50;
+        } 
       });
     });      
 
     popupClose.addEventListener('click', () => {
       popup.style.display = 'none';
+        
     });
 
   };
