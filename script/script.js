@@ -177,7 +177,7 @@ window.addEventListener('DOMContentLoaded', function(){
       let li = document.createElement('li');
       li.classList.add('dot');
       dots.appendChild(li);
-      console.log(dots);
+      
     });
 
     let dot = dots.querySelectorAll('.dot');
@@ -267,7 +267,39 @@ window.addEventListener('DOMContentLoaded', function(){
   };
   slider();
 
+  // Сommand photo
+  const commandPhotos = () => {
+
+    const commandPhoto = document.querySelectorAll('.command__photo');
+
+    commandPhoto.forEach((item) => {
+      item.addEventListener('mouseenter', (event) => {
+        event.target.alt = event.target.src;
+        event.target.src = event.target.dataset.img;
+      });
+
+      item.addEventListener('mouseleave', (event) => {
+        event.target.src = event.target.alt;
+      });
+    });
+
+  };
+  commandPhotos();
+
+  const calculate = () => {
+
+    const calcBlock = document.querySelector('.calc-block'),
+          input = calcBlock.querySelectorAll('input');
+
+    input.forEach((item) => {
+      item.addEventListener('input', () => {
+        item.value = input.value.replace(/\D/g, '');
+      });
+    });
 
 
+
+  };
+  calculate();
 
 });
