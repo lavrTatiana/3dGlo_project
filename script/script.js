@@ -298,9 +298,10 @@ window.addEventListener('DOMContentLoaded', function(){
           totalValue = document.getElementById('total'),
           input = calcBlock.querySelectorAll('input');
 
+    let total = 0;
+
     const countSum = () => {
-      let total = 0,
-          countValue = 1,
+      let countValue = 1,
           dayValue = 1;
       const typeValue = calcType.options[calcType.selectedIndex].value,
             squareValue = +calcSquare.value;
@@ -319,7 +320,7 @@ window.addEventListener('DOMContentLoaded', function(){
         total = price * typeValue * squareValue * countValue * dayValue;
       }
 
-      totalValue.textContent = total;
+      // totalValue.textContent = Math.floor(total);
     };
 
     input.forEach((item) => {
@@ -328,19 +329,48 @@ window.addEventListener('DOMContentLoaded', function(){
       });
     });
 
+    function animate({ duration, draw, timing }) {
+      
+      let start = performance.now();
+
+        requestAnimationFrame(function animate(time) {
+
+        let timeFraction = (time - start) / duration;
+        if (timeFraction > 1) {
+          timeFraction = 1;
+        }  
+        let progress = timing(timeFraction);
+        draw(progress);
+        if (timeFraction < 1) {
+            requestAnimationFrame(animate);
+        }
+      });
+  }  
     calcBlock.addEventListener('change', (event) => {
 
       const target = event.target;
       if (target.matches('select') || target.matches('input')) {
         countSum();
       }
-
-    });
-
-
-
+    
+      animate({
+        duration: 3000,
+        timing(timeFraction) {
+          return timeFraction;
+        },
+        draw(progress) {
+          totalValue.textContent = Math.floor(progress * total);
+        }
+      });
+    });  
   };
+  
   calc(100);
+
+  
+  
+  
+  
 
 
 
