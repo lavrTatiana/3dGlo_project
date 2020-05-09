@@ -42,7 +42,7 @@ window.addEventListener('DOMContentLoaded', function(){
     timeInterval = setInterval(updateClock, 1000);
     updateClock();
   }
-  countTimer('30 april 2020');
+  countTimer('11 may 2020');
   
   // Menu 
   const toggleMenu = () => {
@@ -367,8 +367,155 @@ window.addEventListener('DOMContentLoaded', function(){
   
   calc(100);
 
-  
-  
+  // send-ajax-form
+  const sendForm = () => {
+
+    const errorMessage = 'Что-то пошло не так',
+          loadMessage = 'Загрузка...',
+          successMessage = 'Спасибо! Мы скоро с Вами свяжемся!';
+    
+    const form = document.getElementById('form1'),
+          footerForm = document.getElementById('form2'),
+          popUpForm = document.getElementById('form3'),
+          formPhone = document.querySelectorAll('.form-phone'),
+          formName = document.querySelectorAll('.form-name'),
+          formMess = document.querySelector('.mess');
+
+    formPhone.forEach((item) => {
+      // item.addEventListener('focus', () => {
+      //   if (!/^\+\d*$/.test(item.value)) {
+      //     item.value = '+';
+      //   }
+      // });
+
+      item.addEventListener('keypress', e => {
+        // Отменяем ввод не цифр
+        if(!/[\+\d]/.test(e.key)) {
+          e.preventDefault();
+        }
+      });
+
+    });      
+    
+    formName.forEach((item) => {
+      item.addEventListener('keypress', (e) => {
+        // Отменяем ввод не букв и не пробелов
+        if(!/[А-Яа-яЁё\s]/.test(e.key)) {
+          e.preventDefault();
+        }
+      });
+    }); 
+
+    formMess.addEventListener('keypress', (e) => {
+      // Отменяем ввод не букв и не пробелов
+      if(!/[А-Яа-яЁё\s]/.test(e.key)) {
+        e.preventDefault();
+      }
+    });
+
+    const statusMessage = document.createElement('div');
+    statusMessage.style.cssText = 'font-size: 2rem';
+    
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      form.appendChild(statusMessage);
+      
+      statusMessage.textContent = loadMessage;
+
+      const formData = new FormData(form);
+      let body = {};      
+      formData.forEach((val, key) => {
+        body[key] = val;
+      });
+
+      
+      postData(body, () => {
+        statusMessage.textContent = successMessage;
+      }, (error) => {
+        statusMessage.textContent = errorMessage;
+        console.error(error);
+      });
+
+      clearInputs(form);
+    });
+
+    footerForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      footerForm.appendChild(statusMessage);
+      
+      statusMessage.textContent = loadMessage;
+
+      const formData = new FormData(footerForm);
+      let body = {};      
+      formData.forEach((val, key) => {
+        body[key] = val;
+      });
+
+      
+      postData(body, () => {
+        statusMessage.textContent = successMessage;
+      }, (error) => {
+        statusMessage.textContent = errorMessage;
+        console.error(error);
+      });
+
+      clearInputs(footerForm);
+
+    });
+
+    popUpForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      popUpForm.appendChild(statusMessage);
+      statusMessage.style.cssText = 'font-size: 1.5rem; color: white;';
+      
+      statusMessage.textContent = loadMessage;
+
+      const formData = new FormData(popUpForm);
+      let body = {};      
+      formData.forEach((val, key) => {
+        body[key] = val;
+      });
+
+      
+      postData(body, () => {
+        statusMessage.textContent = successMessage;
+      }, (error) => {
+        statusMessage.textContent = errorMessage;
+        console.error(error);
+      });
+
+      clearInputs(popUpForm);
+
+    });
+
+    const postData = (body, outputData, errorData) => {
+      const request = new XMLHttpRequest();
+      request.addEventListener('readystatechange', () => {
+        
+        if (request.readyState !== 4) {
+          return;
+        }
+        if (request.status === 200) {
+          outputData();
+        } else {
+          errorData(request.status);
+        }
+      });
+
+      request.open('POST', './server.php');
+      request.setRequestHeader('Content-Type', 'application/json');
+      request.send(JSON.stringify(body));
+    };
+
+    const clearInputs = (elem) => {
+      let inputs = elem.querySelectorAll('input');
+      inputs.forEach((i) => {
+        i.value = '';
+      });
+    };
+
+  };
+  sendForm();
   
   
 
