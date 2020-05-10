@@ -374,20 +374,15 @@ window.addEventListener('DOMContentLoaded', function(){
           loadMessage = 'Загрузка...',
           successMessage = 'Спасибо! Мы скоро с Вами свяжемся!';
     
-    const form = document.getElementById('form1'),
-          footerForm = document.getElementById('form2'),
+    const forms = document.querySelectorAll('form'),
+          // form = document.getElementById('form1'),
+          // footerForm = document.getElementById('form2'),
           popUpForm = document.getElementById('form3'),
           formPhone = document.querySelectorAll('.form-phone'),
           formName = document.querySelectorAll('.form-name'),
           formMess = document.querySelector('.mess');
 
     formPhone.forEach((item) => {
-      // item.addEventListener('focus', () => {
-      //   if (!/^\+\d*$/.test(item.value)) {
-      //     item.value = '+';
-      //   }
-      // });
-
       item.addEventListener('keypress', e => {
         // Отменяем ввод не цифр
         if(!/[\+\d]/.test(e.key)) {
@@ -416,77 +411,33 @@ window.addEventListener('DOMContentLoaded', function(){
     const statusMessage = document.createElement('div');
     statusMessage.style.cssText = 'font-size: 2rem';
     
-    form.addEventListener('submit', (event) => {
-      event.preventDefault();
-      form.appendChild(statusMessage);
-      
-      statusMessage.textContent = loadMessage;
+    popUpForm.style.cssText = 'font-size: 1.5rem; color: white;';
 
-      const formData = new FormData(form);
-      let body = {};      
-      formData.forEach((val, key) => {
-        body[key] = val;
+    forms.forEach((form) => {
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        form.appendChild(statusMessage);
+        
+        statusMessage.textContent = loadMessage;
+  
+        const formData = new FormData(form);
+        let body = {};      
+        formData.forEach((val, key) => {
+          body[key] = val;
+        });
+  
+        
+        postData(body, () => {
+          statusMessage.textContent = successMessage;
+        }, (error) => {
+          statusMessage.textContent = errorMessage;
+          console.error(error);
+        });
+  
+        clearInputs(form);
       });
-
-      
-      postData(body, () => {
-        statusMessage.textContent = successMessage;
-      }, (error) => {
-        statusMessage.textContent = errorMessage;
-        console.error(error);
-      });
-
-      clearInputs(form);
     });
-
-    footerForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      footerForm.appendChild(statusMessage);
-      
-      statusMessage.textContent = loadMessage;
-
-      const formData = new FormData(footerForm);
-      let body = {};      
-      formData.forEach((val, key) => {
-        body[key] = val;
-      });
-
-      
-      postData(body, () => {
-        statusMessage.textContent = successMessage;
-      }, (error) => {
-        statusMessage.textContent = errorMessage;
-        console.error(error);
-      });
-
-      clearInputs(footerForm);
-
-    });
-
-    popUpForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      popUpForm.appendChild(statusMessage);
-      statusMessage.style.cssText = 'font-size: 1.5rem; color: white;';
-      
-      statusMessage.textContent = loadMessage;
-
-      const formData = new FormData(popUpForm);
-      let body = {};      
-      formData.forEach((val, key) => {
-        body[key] = val;
-      });
-
-      
-      postData(body, () => {
-        statusMessage.textContent = successMessage;
-      }, (error) => {
-        statusMessage.textContent = errorMessage;
-        console.error(error);
-      });
-
-      clearInputs(popUpForm);
-
-    });
+    
 
     const postData = (body, outputData, errorData) => {
       const request = new XMLHttpRequest();
