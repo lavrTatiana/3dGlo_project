@@ -380,7 +380,8 @@ window.addEventListener('DOMContentLoaded', function(){
           popUpForm = document.getElementById('form3'),
           formPhone = document.querySelectorAll('.form-phone'),
           formName = document.querySelectorAll('.form-name'),
-          formMess = document.querySelector('.mess');
+          formMess = document.querySelector('.mess'),
+          spiner = document.querySelector('.loadingio-spinner-spinner-8pz25s3zj4w');
 
     formPhone.forEach((item) => {
       item.addEventListener('keypress', e => {
@@ -418,7 +419,7 @@ window.addEventListener('DOMContentLoaded', function(){
         event.preventDefault();
         form.appendChild(statusMessage);
         
-        statusMessage.textContent = loadMessage;
+        statusMessage.appendChild(spiner);
   
         const formData = new FormData(form);
         let body = {};      
@@ -428,8 +429,14 @@ window.addEventListener('DOMContentLoaded', function(){
   
         
         postData(body)
-          .then((res) => statusMessage.textContent = successMessage)
-          .catch((error) => statusMessage.textContent = errorMessage);
+          .then((res) => {
+            statusMessage.removeChild(spiner);
+            statusMessage.textContent = successMessage;
+          })
+          .catch((error) => {
+            statusMessage.removeChild(spiner);
+            statusMessage.textContent = errorMessage;
+          });
         
   
         clearInputs(form);
