@@ -428,8 +428,8 @@ window.addEventListener('DOMContentLoaded', function(){
   
         
         postData(body)
-          .then(statusMessage.textContent = successMessage)
-          .catch(error => statusMessage.textContent = errorMessage);
+          .then((res) => statusMessage.textContent = successMessage)
+          .catch((error) => statusMessage.textContent = errorMessage);
         
   
         clearInputs(form);
