@@ -410,10 +410,9 @@ window.addEventListener('DOMContentLoaded', function(){
     });
 
     const statusMessage = document.createElement('div');
-    statusMessage.style.cssText = 'font-size: 2rem';
+    statusMessage.style.cssText = 'font-size: 2rem; color: white;';
     
-    popUpForm.style.cssText = 'font-size: 1.5rem; color: white;';
-
+    
     forms.forEach((form) => {
       form.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -429,13 +428,17 @@ window.addEventListener('DOMContentLoaded', function(){
   
         
         postData(body)
-          .then((res) => {
+          .then((response) => {
+            if (response.status !== 200) {
+              throw new Error('Status network is not 200');
+            }
             statusMessage.removeChild(spiner);
             statusMessage.textContent = successMessage;
           })
           .catch((error) => {
             statusMessage.removeChild(spiner);
             statusMessage.textContent = errorMessage;
+            console.error(error);
           });
         
   
@@ -445,25 +448,15 @@ window.addEventListener('DOMContentLoaded', function(){
     
 
     const postData = (body) => {
-      return new Promise((resolve, reject) => {
-        const request = new XMLHttpRequest();
-        request.addEventListener('readystatechange', () => {
-          
-          if (request.readyState !== 4) {
-            return;
-          }
-          if (request.status === 200) {
-            resolve();
-          } else {
-            reject(request.status);
-          }
-
-        });
-        request.open('POST', './server.php');
-        request.setRequestHeader('Content-Type', 'application/json');
-        request.send(JSON.stringify(body)); 
-      });
       
+      return fetch('./server.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });      
+    
     };
 
     const clearInputs = (elem) => {
