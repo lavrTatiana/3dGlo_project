@@ -1,13 +1,9 @@
 const sendForm = () => {
 
   const errorMessage = 'Что-то пошло не так',
-        loadMessage = 'Загрузка...',
         successMessage = 'Спасибо! Мы скоро с Вами свяжемся!';
   
   const forms = document.querySelectorAll('form'),
-        // form = document.getElementById('form1'),
-        // footerForm = document.getElementById('form2'),
-        popUpForm = document.getElementById('form3'),
         formPhone = document.querySelectorAll('.form-phone'),
         formName = document.querySelectorAll('.form-name'),
         formMess = document.querySelector('.mess'),
@@ -20,7 +16,6 @@ const sendForm = () => {
         e.preventDefault();
       }
     });
-
   });      
   
   formName.forEach((item) => {
@@ -39,15 +34,16 @@ const sendForm = () => {
     }
   });
 
-  const statusMessage = document.createElement('div');
-  statusMessage.style.cssText = 'font-size: 2rem; color: white;';
+  
   
   
   forms.forEach((form) => {
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      form.appendChild(statusMessage);
+      const statusMessage = document.createElement('div');
+      statusMessage.style.cssText = 'font-size: 2rem; color: white;';
       
+      form.appendChild(statusMessage);
       statusMessage.appendChild(spiner);
 
       const formData = new FormData(form);
@@ -64,16 +60,19 @@ const sendForm = () => {
           }
           statusMessage.removeChild(spiner);
           statusMessage.textContent = successMessage;
-          
+          setTimeout(() => {
+            statusMessage.remove();
+          }, 5000);
         })
         .catch((error) => {
           statusMessage.removeChild(spiner);
           statusMessage.textContent = errorMessage;
-          
+          setTimeout(() => {
+            statusMessage.remove();
+          }, 5000);
           console.error(error);
         });
       
-
       clearInputs(form);
     });
   });
@@ -96,9 +95,7 @@ const sendForm = () => {
     inputs.forEach((i) => {
       i.value = '';
     });
-   
   };
-
 };
 
 export default sendForm;
